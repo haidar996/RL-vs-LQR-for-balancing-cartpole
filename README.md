@@ -380,9 +380,9 @@ Hardware implementation on physical cart-pole system
 
 👨‍💻 Author
 Haidar Saad
-Aerospace Engineering — Robotics and Control Systems
+robotics Engineering — Robotics and Control Systems
 
-https://img.shields.io/badge/GitHub-haidar996-blue
+
 
 📄 License
 This project is licensed under the MIT License - see the LICENSE file for details.
