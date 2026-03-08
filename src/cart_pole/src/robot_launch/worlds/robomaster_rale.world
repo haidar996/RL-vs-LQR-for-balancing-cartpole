@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="robomaster_rale">
+    
+    <!-- Physics configuration for RTF 0.8 -->
+    <physics name="slow_rtf_physics" type="ode" default="true">
+      <max_step_size>0.001</max_step_size>      <!-- 1ms - Standard for control -->
+      <real_time_factor>1.0</real_time_factor>   <!-- 80% of real-time -->
+      <real_time_update_rate>1000</real_time_update_rate> <!-- 800 Hz (0.8 / 0.001) -->
+      <ode>
+        <solver>
+          <type>quick</type>                     <!-- Good for simple systems -->
+          <iters>50</iters>                      <!-- Good balance -->
+          <sor>1.3</sor>                         <!-- Successive Over-Relaxation -->
+        </solver>
+        <constraints>
+          <cfm>0.0</cfm>                         <!-- Constraint Force Mixing -->
+          <erp>0.2</erp>                         <!-- Error Reduction Parameter -->
+          <contact_max_correcting_vel>100.0</contact_max_correcting_vel>
+          <contact_surface_layer>0.001</contact_surface_layer>
+        </constraints>
+      </ode>
+    </physics>
+    
+    <!-- Existing content below -->
+    <light type="directional" name="my_light">
+      <pose>0 0 10 0 0 0</pose>
+    </light>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    
+  </world>
+</sdf>

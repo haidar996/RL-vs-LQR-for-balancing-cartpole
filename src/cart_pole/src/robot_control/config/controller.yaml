@@ -1,0 +1,24 @@
+#sentry_robot  
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 20
+
+cart_controller:
+  type    : effort_controllers/JointEffortController
+  joint   : cart_joint
+  publish_rate: 200
+pole_controller:
+  type    : effort_controllers/JointEffortController
+  joint   : pole_joint
+  publish_rate: 200
+  
+
+pole_position_controller:
+  type: position_controllers/JointPositionController
+  joint: pole_joint
+  publish_rate: 200
+cart_position_controller:
+  type: position_controllers/JointPositionController
+  joint: cart_joint
+  publish_rate: 200
+  

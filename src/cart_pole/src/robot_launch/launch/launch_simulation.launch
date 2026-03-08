@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Minimal launch file to spawn cart_pole in Gazebo -->
+
+  <!-- Arguments -->
+  <arg name="model" default="$(find robot_description)/robot/cart_pole.urdf.xacro"/>
+  <arg name="paused" default="true"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  <arg name="x" default="0.0"/>
+  <arg name="y" default="0.0"/>
+  <arg name="z" default="1.225"/>
+  <!-- Add argument for initial joint position -->
+  <arg name="initial_joint_position" default="0.0"/>
+
+  <!-- Start Gazebo -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find robot_launch)/worlds/robomaster_rale.world"/>
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="headless" value="$(arg headless)"/>
+  </include>
+  
+  False
+  <!-- Load URDF to parameter server -->
+  <param name="robot_description" command="$(find xacro)/xacro '$(arg model)'" />
+
+  <!-- Spawn robot in Gazebo with initial joint position -->
+  <node name="urdf_spawner" 
+        pkg="gazebo_ros" 
+        type="spawn_model" 
+        respawn="false" 
+        output="screen"
+        args="-x $(arg x)
+              -y $(arg y)
+              -z $(arg z)
+              -urdf
+              -model cart_pole
+              -param robot_description
+              -J pole_joint $(arg initial_joint_position)"/>
+
+  <!-- Load controllers (if you want basic control) -->
+  <include file="$(find robot_control)/launch/robot_control.launch"/>
+
+  <!-- Start commander pub_command.py node -->
+<node pkg="commander" type="lyapunov.py" name="ddqn_trainer" output="screen"/>
+</launch>
