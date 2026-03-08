@@ -33,8 +33,6 @@ The Cart-Pole is one of the most famous benchmark control problems used in both 
 The system state is represented as:
 x = [x, ẋ, θ, θ̇]
 
-text
-
 | Variable | Description |
 |----------|-------------|
 | x | Cart position |
@@ -70,8 +68,6 @@ RL-vs-LQR-for-balancing-cartpole/
 ├── videos/ # Simulation recordings
 └── README.md
 
-text
-
 ---
 
 ## 1️⃣ LQR Controller
@@ -79,14 +75,36 @@ text
 ### Concept
 
 The Linear Quadratic Regulator (LQR) is an optimal state feedback controller designed from the **linearized state-space model**:
+## 1️⃣ LQR Controller
+
+### Concept
+
+The Linear Quadratic Regulator (LQR) is an optimal state feedback controller designed from the **linearized state-space model**:
 ẋ = Ax + Bu
 
-text
-
 The control law is `u = -Kx`, where the gain matrix `K` is computed by minimizing the quadratic cost function:
+
+
 J = ∫(xᵀQx + uᵀRu)dt
 
-text
+| Matrix | Meaning |
+|--------|---------|
+| Q | State error penalty |
+| R | Control effort penalty |
+
+### Implementation
+
+The controller is implemented in `src/cart_pole/src/commander/scripts/lqr.py`:
+
+- Defines system matrices A, B
+- Computes LQR gain matrix K
+- Subscribes to robot states from ROS
+- Computes control force using state feedback
+- Publishes commands to the robot controller
+
+### LQR Parameters
+
+**State penalty matrix:**
 
 | Matrix | Meaning |
 |--------|---------|
@@ -108,12 +126,8 @@ The controller is implemented in `src/cart_pole/src/commander/scripts/lqr.py`:
 **State penalty matrix:**
 Q = diag(10, 1, 100, 1)
 
-text
-
 **Control effort penalty:**
 R = 0.01
-
-text
 
 These matrices prioritize keeping the pole upright while minimizing excessive control force.
 
@@ -121,8 +135,6 @@ These matrices prioritize keeping the pole upright while minimizing excessive co
 
 The gain matrix K computed from the Riccati equation has the form:
 K = [k₁, k₂, k₃, k₄]
-
-text
 
 which multiplies the system state vector to compute the control force.
 
@@ -153,16 +165,12 @@ src/cart_pole/src/commander/scripts/
 ├── DDQNAGENT.py # Agent logic (replay buffer, action selection, learning)
 └── train_ddqn.py # Main training loop
 
-text
-
 The network is implemented using **PyTorch**.
 
 ### State Representation
 
 The agent observes the same system state as the LQR controller:
 s = [x, ẋ, θ, θ̇]
-
-text
 
 These four values form the input layer of the neural network.
 
@@ -193,8 +201,6 @@ Hidden layer : 128 neurons (ReLU)
 Hidden layer : 128 neurons (ReLU)
 Output layer : 2 neurons (Q-values for each action)
 
-text
-
 The output layer produces `Q(s,0)` and `Q(s,1)` representing the expected return for each action.
 
 ### Hyperparameters
@@ -215,8 +221,6 @@ The output layer produces `Q(s,0)` and `Q(s,1)` representing the expected return
 
 The agent stores transitions in replay memory:
 (s, a, r, s', done)
-
-text
 
 where:
 - `s` = current state
@@ -239,8 +243,6 @@ sample random batch
 compute target Q-value
 update neural network
 periodically update target network
-
-text
 
 ---
 
@@ -276,8 +278,6 @@ commander node (LQR/RL)
 controller command
 ↓
 Cart Actuator
-
-text
 
 ---
 
@@ -318,7 +318,7 @@ Simulation videos are provided in the `videos/` directory:
    ```bash
    git clone https://github.com/haidar996/RL-vs-LQR-for-balancing-cartpole.git
    cd RL-vs-LQR-for-balancing-cartpole
-Build the workspace
+   Build the workspace
 
 bash
 catkin_make
